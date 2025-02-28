@@ -11,6 +11,10 @@ spec:
     metadata:
       labels:
         app: store-front
+        {{- if eq .Values.useMesh true }}
+        sidecar.istio.io/inject: "true"
+        version: "{{ .Chart.AppVersion }}"
+        {{- end }}
     spec:
       nodeSelector:
         "kubernetes.io/os": linux
@@ -63,5 +67,6 @@ spec:
   ports:
   - port: 80
     targetPort: 8080
+    name: http
   selector:
     app: store-front

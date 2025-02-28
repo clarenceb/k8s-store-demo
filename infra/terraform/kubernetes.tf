@@ -27,11 +27,11 @@ resource "azurerm_kubernetes_cluster" "example" {
     azure_rbac_enabled = true
   }
 
-  api_server_access_profile {
-    authorized_ip_ranges = [
-      "${data.http.ifconfig.response_body}/32"
-    ]
-  }
+  # api_server_access_profile {
+  #   authorized_ip_ranges = [
+  #     "${data.http.ifconfig.response_body}/32"
+  #   ]
+  # }
 
   network_profile {
     network_plugin      = "azure"

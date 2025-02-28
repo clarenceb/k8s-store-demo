@@ -24,6 +24,8 @@ useAzureAd: true
 managedIdentityName: ${AZURE_IDENTITY_NAME}
 managedIdentityClientId: ${AZURE_IDENTITY_CLIENT_ID}
 EOF
+
+kubelogin convert-kubeconfig -l azurecli
 fi
 
 ##########################################################
@@ -49,7 +51,7 @@ virtualWorker:
 EOF
 
 ###########################################################
-# Add ai-servie if Azure OpenAI endpoint is provided
+# Add ai-service if Azure OpenAI endpoint is provided
 ###########################################################
 
 if [ -n "${AZURE_OPENAI_ENDPOINT}" ]; then
@@ -121,7 +123,7 @@ if [ -n "${AZURE_SERVICE_BUS_URI}" ]; then
   # If Azure identity exists just set the Azure Service Bus Hostname
   if [ -n "${AZURE_IDENTITY_CLIENT_ID}" ] && [ -n "${AZURE_IDENTITY_NAME}" ]; then
     cat << EOF >> custom-values.yaml
-    orderQueueHost: ${AZURE_SERVICE_BUS_HOST}
+  orderQueueHost: ${AZURE_SERVICE_BUS_HOST}
 EOF
   else
     cat << EOF >> custom-values.yaml

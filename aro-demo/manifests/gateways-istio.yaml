@@ -1,0 +1,62 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: store-front-gw
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: http
+    hosts:
+    - store-front.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: store-front-vs
+  namespace: pets
+spec:
+  hosts:
+  - store-front.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+  gateways:
+    - store-front-gw
+  http:
+    - route:
+      - destination:
+          host: store-front
+          port:
+            number: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: store-admin-gw
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - store-admin.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: store-admin-vs
+spec:
+  hosts:
+  - store-admin.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+  gateways:
+    - store-admin-gw
+  http:
+    - route:
+      - destination:
+          host: store-admin
+          port:
+            number: 80

@@ -31,6 +31,14 @@ data:
   AZURE_OPENAI_DALLE_DEPLOYMENT_NAME: "{{ .Values.aiService.openAiDalleModelName }}"
   AZURE_OPENAI_API_VERSION: "{{ .Values.aiService.azureOpenAiApiVersion }}"
   {{- end }}
+  {{- /*
+  If ARO is used and Workload Identity is not yet supported, set the Entra ID SP details for DefaultAzureCredential to work
+  */}}
+  {{- if eq .Values.aro true }}
+  AZURE_CLIENT_ID: "{{ .Values.azure.clientId }}"
+  AZURE_TENANT_ID: "{{ .Values.azure.tenantId }}"
+  AZURE_CLIENT_SECRET: "{{ .Values.azure.clientSecret }}"
+  {{- end }}
 ---
 {{- /*
 If Azure AD is not used, create a secret with OpenAI API Key
@@ -62,6 +70,10 @@ spec:
         */}}
         {{- if eq .Values.useAzureAd true }}
         azure.workload.identity/use: "true"
+        {{- end }}
+        {{- if eq .Values.useMesh true }}
+        sidecar.istio.io/inject: "true"
+        version: "{{ .Chart.AppVersion }}"
         {{- end }}
     spec:
       {{- /*

@@ -1,0 +1,43 @@
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: basic
+  namespace: istio-system
+spec:
+  policy:
+    type: Istiod
+  addons:
+    grafana:
+      enabled: true
+    kiali:
+      enabled: true
+      name: kiali
+      install:
+        dashboard:
+          viewOnly: false
+          enableGrafana: true
+          enableTracing: true
+          enablePrometheus: true
+        service:
+          ingress:
+            contextPath: /kiali
+    prometheus:
+      enabled: true
+  telemetry:
+    type: Istiod
+  version: v2.6
+  gateways:
+    openshiftRoute:
+      enabled: true
+    ingress: # istio-ingressgateway
+      service:
+        type: ClusterIP
+        ports:
+        - name: status-port
+          port: 15020
+        - name: http2
+          port: 80
+          targetPort: 8080
+        - name: https
+          port: 443
+          targetPort: 8443

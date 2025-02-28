@@ -13,6 +13,10 @@ spec:
     metadata:
       labels:
         app: mongodb
+        {{- if eq .Values.useMesh true }}
+        sidecar.istio.io/inject: "true"
+        version: "{{ .Chart.AppVersion }}"
+        {{- end }}
     spec:
       nodeSelector:
         "kubernetes.io/os": linux

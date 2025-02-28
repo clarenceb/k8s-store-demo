@@ -59,7 +59,7 @@ var openAiDeployment = [
     model: {
       format: 'OpenAI'
       name: openAiModelName
-      version: '0613'
+      version: '0125'
     }
   }
 ]

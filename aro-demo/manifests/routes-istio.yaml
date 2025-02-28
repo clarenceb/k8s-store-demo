@@ -1,0 +1,45 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    maistra.io/original-host: store-front.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+  labels:
+    maistra.io/gateway-name: store-front-gw
+    maistra.io/gateway-namespace: pets
+  name: pets-store-front-gw-17ece1ccbd2b8ae0
+  namespace: istio-system
+spec:
+  host: store-front.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+  port:
+    targetPort: http2
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: istio-ingressgateway
+    weight: 100
+  wildcardPolicy: None
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    maistra.io/original-host: store-admin.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+  labels:
+    maistra.io/gateway-name: store-admin-gw
+    maistra.io/gateway-namespace: pets
+  name: pets-store-admin-gw-adbfdae3e2393f1e
+  namespace: istio-system
+spec:
+  host: store-admin.apps.tm7msl4ly3768bc802.australiaeast.aroapp.io
+  port:
+    targetPort: http2
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: edge
+  to:
+    kind: Service
+    name: istio-ingressgateway
+    weight: 100
+  wildcardPolicy: None

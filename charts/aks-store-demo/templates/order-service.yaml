@@ -14,6 +14,11 @@ data:
   ORDER_QUEUE_HOSTNAME: "{{ .Values.orderService.queueHost }}"
   ORDER_QUEUE_NAME: "{{ .Values.orderService.queueName }}"
   FASTIFY_ADDRESS: "0.0.0.0"
+  {{- if eq .Values.aro true }}
+  AZURE_CLIENT_ID: "{{ .Values.azure.clientId }}"
+  AZURE_TENANT_ID: "{{ .Values.azure.tenantId }}"
+  AZURE_CLIENT_SECRET: "{{ .Values.azure.clientSecret }}"
+  {{- end }}
 ---
 {{- if eq .Values.useAzureAd false }}
 apiVersion: v1
@@ -40,6 +45,10 @@ spec:
         app: order-service
         {{- if eq .Values.useAzureAd true }}
         azure.workload.identity/use: "true"
+        {{- end }}
+        {{- if eq .Values.useMesh true }}
+        sidecar.istio.io/inject: "true"
+        version: "{{ .Chart.AppVersion }}"
         {{- end }}
     spec:
       {{- if eq .Values.useAzureAd true }}

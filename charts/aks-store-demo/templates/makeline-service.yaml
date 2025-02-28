@@ -22,6 +22,14 @@ data:
   {{- else }}
   ORDER_DB_COLLECTION_NAME: "{{ .Values.makelineService.orderDBCollectionName }}"
   {{- end }}
+  {{- /*
+  If ARO is used and Workload Identity is not yet supported, set the Entra ID SP details for DefaultAzureCredential to work
+  */}}
+  {{- if eq .Values.aro true }}
+  AZURE_CLIENT_ID: "{{ .Values.azure.clientId }}"
+  AZURE_TENANT_ID: "{{ .Values.azure.tenantId }}"
+  AZURE_CLIENT_SECRET: "{{ .Values.azure.clientSecret }}"
+  {{- end }}
 ---
 {{- if and (eq .Values.useAzureAd false) .Values.makelineService.orderDBUsername .Values.makelineService.orderDBPassword }}
 apiVersion: v1
@@ -48,6 +56,10 @@ spec:
         app: makeline-service
         {{- if eq .Values.useAzureAd true }}
         azure.workload.identity/use: "true"
+        {{- end }}
+        {{- if eq .Values.useMesh true }}
+        sidecar.istio.io/inject: "true"
+        version: "{{ .Chart.AppVersion }}"
         {{- end }}
     spec:
       {{- if eq .Values.useAzureAd true }}
