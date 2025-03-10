@@ -29,10 +29,10 @@ spec:
     metadata:
       labels:
         app: rabbitmq
-        {- if eq .Values.useMesh true }}
+        {{- if eq .Values.useMesh true }}
         sidecar.istio.io/inject: "true"
-        version: "{{ .Chart.AppVersion }}"
         {{- end }}
+        version: "{{ .Chart.AppVersion }}"
     spec:
       nodeSelector:
         "kubernetes.io/os": linux

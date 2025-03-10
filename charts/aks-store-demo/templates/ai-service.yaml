@@ -73,8 +73,8 @@ spec:
         {{- end }}
         {{- if eq .Values.useMesh true }}
         sidecar.istio.io/inject: "true"
-        version: "{{ .Chart.AppVersion }}"
         {{- end }}
+        version: "{{ .Chart.AppVersion }}"
     spec:
       {{- /*
       If Azure AD is used, use the service account

@@ -48,8 +48,8 @@ spec:
         {{- end }}
         {{- if eq .Values.useMesh true }}
         sidecar.istio.io/inject: "true"
-        version: "{{ .Chart.AppVersion }}"
         {{- end }}
+        version: "{{ .Chart.AppVersion }}"
     spec:
       {{- if eq .Values.useAzureAd true }}
       serviceAccount: {{ .Values.managedIdentityName }}

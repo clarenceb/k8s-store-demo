@@ -1,0 +1,33 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-nothing
+  namespace: pets
+spec:
+  {}
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-istio-gw-to-pets-ns
+  namespace: pets
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+    - source:
+        namespaces: ["istio-system"]
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-within-pets-ns
+  namespace: pets
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["pets"]

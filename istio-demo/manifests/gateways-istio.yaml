@@ -1,0 +1,53 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: pet-store-gw
+  namespace: pets
+spec:
+  selector:
+    istio: aks-istio-ingressgateway-external
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: istiodemo-credential
+    hosts:
+    - store-front.pets.clarenceb.com
+    - store-admin.pets.clarenceb.com
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: store-front-vs
+  namespace: pets
+spec:
+  hosts:
+  - store-front.pets.clarenceb.com
+  gateways:
+    - pet-store-gw
+  http:
+    - route:
+      - destination:
+          host: store-front
+          port:
+            number: 80
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: store-admin-vs
+  namespace: pets
+spec:
+  hosts:
+  - store-admin.pets.clarenceb.com
+  gateways:
+    - pet-store-gw
+  http:
+    - route:
+      - destination:
+          host: store-admin
+          port:
+            number: 80

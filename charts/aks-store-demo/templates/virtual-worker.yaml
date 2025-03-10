@@ -13,8 +13,8 @@ spec:
         app: virtual-worker
         {{- if eq .Values.useMesh true }}
         sidecar.istio.io/inject: "true"
-        version: "{{ .Chart.AppVersion }}"
         {{- end }}
+        version: "{{ .Chart.AppVersion }}"
     spec:
       nodeSelector:
         "kubernetes.io/os": linux

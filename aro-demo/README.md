@@ -29,7 +29,7 @@ ARO_PASSWORD="$(az aro list-credentials -g $RESOURCEGROUP -n $CLUSTER | jq -r ".
 oc login $ARO_API_URI -u kubeadmin -p $ARO_PASSWORD
 oc status
 
-cp ../custom-values.yaml .
+cp ../custom-values.yaml ./custom-values.yaml
 
 # Allow less secure configuration for store-front, store-admin, ai-service
 oc adm policy add-scc-to-user anyuid -z default -n pet
