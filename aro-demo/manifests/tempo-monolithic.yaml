@@ -1,0 +1,21 @@
+kind: TempoMonolithic
+apiVersion: tempo.grafana.com/v1alpha1
+metadata:
+  name: tempo-basic
+  namespace: istio-system
+spec:
+  jaegerui:
+    enabled: true
+    resources:
+      limits:
+        cpu: '2'
+        memory: 2Gi
+    route:
+      enabled: true
+  resources:
+    limits:
+      cpu: '2'
+      memory: 2Gi
+  storage:
+    traces:
+      backend: memory

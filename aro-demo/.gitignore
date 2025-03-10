@@ -2,3 +2,4 @@ aro-env.sh
 custom-values.yaml
 *-sp.json
 manifests/tls-secret.yaml
+node_modules/

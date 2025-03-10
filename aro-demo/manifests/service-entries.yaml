@@ -1,0 +1,250 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: azure-servicebus
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+    - name: amqp
+      protocol: TLS
+      number: 5671
+  hosts:
+    - sb-frankbuzzard56.servicebus.windows.net
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: azure-cosmosdb
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+  hosts:
+    - db-frankbuzzard56.documents.azure.com
+
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: azure-cosmosdb-regions
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+  hosts:
+    - db-frankbuzzard56-australiaeast.documents.azure.com
+    - db-frankbuzzard56-australiasoutheast.documents.azure.com
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: microsoft-login
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+  hosts:
+    - login.microsoftonline.com
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: github-ghcr
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+  hosts:
+    - ghcr.io
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: redhat-registry
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+  hosts:
+    - registry.redhat.io
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: azure-cognitiveservices
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+  hosts:
+    - cognitiveservices.azure.com
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: azure-servicebus
+spec:
+  hosts:
+  - sb-frankbuzzard56.servicebus.windows.net
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: sb-frankbuzzard56.servicebus.windows.net
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: azure-cosmosdb
+spec:
+  hosts:
+  - db-frankbuzzard56.documents.azure.com
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: db-frankbuzzard56.documents.azure.com
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: azure-cosmosdb-region1
+spec:
+  hosts:
+  - db-frankbuzzard56-australiaeast.documents.azure.com
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: db-frankbuzzard56-australiaeast.documents.azure.com
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: azure-cosmosdb-region2
+spec:
+  hosts:
+  - db-frankbuzzard56-australiasoutheast.documents.azure.com
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: db-frankbuzzard56-australiasoutheast.documents.azure.com
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: microsoft-login
+spec:
+  hosts:
+  - login.microsoftonline.com
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: login.microsoftonline.com
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: github-ghcr
+spec:
+  hosts:
+  - ghcr.io
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: ghcr.io
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: redhat-registry
+spec:
+  hosts:
+  - registry.redhat.io
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: registry.redhat.io
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: azure-cognitiveservices
+spec:
+  hosts:
+  - cognitiveservices.azure.com
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: cognitiveservices.azure.com
+      weight: 100
+---
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: azure-openai
+  namespace: pets
+spec:
+  location: MESH_EXTERNAL
+  resolution: DNS
+  ports:
+    - name: https
+      protocol: HTTPS
+      number: 443
+  hosts:
+    - aoai-frankbuzzard56.openai.azure.com
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: azure-openai
+spec:
+  hosts:
+  - aoai-frankbuzzard56.openai.azure.com
+  http:
+  - timeout: 5s
+    route:
+    - destination:
+        host: aoai-frankbuzzard56.openai.azure.com
+      weight: 100

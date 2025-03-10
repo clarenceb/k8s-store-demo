@@ -6,6 +6,11 @@ metadata:
 spec:
   policy:
     type: Istiod
+  proxy:
+    networking:
+      trafficControl:
+        outbound:
+          policy: REGISTRY_ONLY
   addons:
     grafana:
       enabled: true

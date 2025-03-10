@@ -95,6 +95,10 @@ From the OperatorHub in ARO, install these Red Hat supported operators:
 oc apply -f manifests/kiali-role.yaml
 oc apply -f manifests/kiali-role-binding.yaml
 oc apply -f manifests/servicemeshcontrolplane.yaml
+
+# Verify outboundTrafficPolicy is REGISTRY_ONLY to block egress traffic not listed in ServiceEntry objects
+oc get cm/istio-basic -n istio-system -o yaml | grep -o "mode: REGISTRY_ONLY" | uniq
+oc get cm/istio-sidecar-injector-basic -n istio-system -o yaml | grep -o "REGISTRY_ONLY" | uniq
 ```
 
 ### Onboard app to the mesh
@@ -133,6 +137,16 @@ oc apply -f manifests/gateways-istio.yaml
 #   tls:
 #     insecureEdgeTerminationPolicy: Redirect
 #     termination: edge
+
+# Strict mTLS in cluster
+oc patch peerauthentication default -n istio-system --type='merge' -p '{"spec":{"mtls":{"mode":"STRICT"}}}'
+oc describe peerauthentication default -n istio-system
+
+# Create service entries
+oc apply -f manifests/service-entries.yaml
+
+# Apply authorization policies
+oc apply -f manifests/authz-policies.yaml
 
 oc get pod
 oc get deployment -o name | xargs -I {} oc rollout restart {}
