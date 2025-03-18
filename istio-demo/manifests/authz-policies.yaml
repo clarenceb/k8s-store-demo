@@ -16,9 +16,9 @@ spec:
   rules:
   - from:
     - source:
-        principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+        principals: ["cluster.local/ns/aks-istio-ingress/sa/aks-istio-ingressgateway-external"]
     - source:
-        namespaces: ["istio-system"]
+        namespaces: ["aks-istio-ingress"]
 ---
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy

@@ -5,8 +5,38 @@ For general AKS Istio add-on and observability components setup see: https://git
 ## Pre-requisites
 
 - AKS Cluster with `pets` namespace and app deployed via `azd up`
-- Istio add-on enabled
+- [Istio add-on enabled](https://learn.microsoft.com/en-us/azure/aks/istio-deploy-addon#install-istio-add-on)
 - Prometheus, Grafana, Kiali installed in the cluster `aks-istio-system` namespace
+
+```sh
+# Prometheus - metrics
+curl -s https://raw.githubusercontent.com/istio/istio/release-${ISTIO_RELEASE}/samples/addons/prometheus.yaml | sed 's/istio-system/aks-istio-system/g' | kubectl apply -f -
+
+# Grafana - monitoring and metrics dashboards
+curl -s https://raw.githubusercontent.com/istio/istio/release-${ISTIO_RELEASE}/samples/addons/grafana.yaml | sed 's/istio-system/aks-istio-system/g' | kubectl apply -f -
+
+# Jaeger - distributed tracing
+curl -s https://raw.githubusercontent.com/istio/istio/release-${ISTIO_RELEASE}/samples/addons/jaeger.yaml | sed 's/istio-system/aks-istio-system/g' | kubectl apply -f -
+
+# Kiali installation
+helm repo add kiali https://kiali.org/helm-charts
+helm repo update
+
+helm install \
+    --set cr.create=true \
+    --set cr.namespace=aks-istio-system \
+    --namespace aks-istio-system \
+    --create-namespace \
+    kiali-operator \
+    kiali/kiali-operator
+
+# Generate a short-lived token to login to Kiali UI
+kubectl -n aks-istio-system create token kiali-service-account
+
+# Port forward to Istio service to access on http://localhost:20001
+kubectl port-forward svc/kiali 20001:20001 -n aks-istio-system
+```
+
 - (Optional) Secure (TLS) Istio Ingress Gateway configuration (otherwise, just use HTTP with the ingress public IP address)
 
 ## Add user node pool and set taints on system node pool
@@ -44,12 +74,15 @@ Block all egress from the cluster without service entries.
 
 ```sh
 kubectl apply  -f istio-demo/manifests/istio-shared-configmap-asm-1-23.yaml
+
+# Kiali might need a restart to pick up service entries
+kubectl rollout restart deployment kiali -n kiali
 ```
 
 # Create service entries
 
 ```sh
-kubectl apply -f istio-demo/manifests/service-entries.yaml
+kubectl apply -f istio-demo/manifests/service-entries.yaml -n pets
 ```
 
 # Apply authorization policies

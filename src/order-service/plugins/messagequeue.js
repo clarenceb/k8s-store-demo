@@ -46,8 +46,10 @@ module.exports = fp(async function (fastify, opts) {
       console.log(`sending message ${body} to ${process.env.ORDER_QUEUE_NAME} on ${fullyQualifiedNamespace} using Microsoft Entra ID Workload Identity credentials`);
       
       if (!fullyQualifiedNamespace) {
-        console.log('no hostname set for message queue. exiting.');
-        return;
+        const errorMsg = 'no hostname set for message queue. exiting.';
+        console.log(errorMsg);
+        fastify.log.error(errorMsg);
+        throw fastify.httpErrors.internalServerError(errorMsg);
       }
       
       const queueName = process.env.ORDER_QUEUE_NAME
@@ -60,6 +62,9 @@ module.exports = fp(async function (fastify, opts) {
 
         try {
           await sender.sendMessages({ body: body });
+        } catch (error) {
+          fastify.log.error(error);
+          throw new Error('Failed to send message');
         } finally {
           await sender.close();
           await sbClient.close();
@@ -67,8 +72,10 @@ module.exports = fp(async function (fastify, opts) {
       }
       sendMessage().catch(console.error);
     } else {
-      console.log('no credentials set for message queue. exiting.')
-      return
+      const errorMsg = 'no credentials set for message queue. exiting.';
+      console.log(errorMsg);
+      fastify.log.error(errorMsg);
+      throw fastify.httpErrors.internalServerError(errorMsg);
     }
   })
 })
