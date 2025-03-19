@@ -1,0 +1,95 @@
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: ai-service-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: ai-service
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: makeline-service-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: makeline-service
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: order-service-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: order-service
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: product-service-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: product-service
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: virtual-customer-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: virtual-customer
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: virtual-worker-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: virtual-worker
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: store-admin-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: store-admin
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY
+---
+apiVersion: networking.istio.io/v1
+kind: Sidecar
+metadata:
+  name: store-front-sidecar
+  namespace: pets
+spec:
+  workloadSelector:
+    labels:
+      app: store-front
+  outboundTrafficPolicy:
+    mode: REGISTRY_ONLY

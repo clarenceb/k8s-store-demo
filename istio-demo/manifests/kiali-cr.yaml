@@ -1,0 +1,25 @@
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  annotations:
+    ansible.sdk.operatorframework.io/verbosity: "1"
+    meta.helm.sh/release-name: kiali-operator
+    meta.helm.sh/release-namespace: aks-istio-system
+  finalizers:
+  - kiali.io/finalizer
+  labels:
+    app: kiali-operator
+    app.kubernetes.io/instance: kiali-operator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kiali-operator
+    app.kubernetes.io/part-of: kiali-operator
+    app.kubernetes.io/version: v2.6.0
+    helm.sh/chart: kiali-operator-2.6.0
+    version: v2.6.0
+  name: kiali
+  namespace: aks-istio-system
+spec:
+  deployment:
+    cluster_wide_access: true
+    image_name: demoappcbxacr.azurecr.io/kiali/kiali
+    image_version: dev-arm64-v6

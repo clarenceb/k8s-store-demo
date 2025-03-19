@@ -72,10 +72,18 @@ az cosmosdb sql role assignment list --resource-group $AZD_RG --account-name $AZ
 helm upgrade demo ../charts/aks-store-demo --install --wait --version 1.2.0 --values ./custom-values.yaml --namespace pets --create-namespace
 
 # Create a TLS edge route
-oc create route edge store-front --service=store-front
-oc create route edge store-admin --service=store-admin
-oc get route store-front
-oc get route store-admin
+# oc create route edge store-front --service=store-front
+# oc create route edge store-admin --service=store-admin
+oc apply -f aro-demo/manifests/routes-istio.yaml
+oc get route -n istio-system
+
+# IP whitelist your client ip since these are public endpoints
+MY_CLIENT_IP=$(curl ifconfig.me)
+oc annotate route pets-store-front-gw-17ece1ccbd2b8ae0 haproxy.router.openshift.io/ip_whitelist="${MY_CLIENT_IP}" -n istio-system
+oc annotate route pets-store-admin-gw-adbfdae3e2393f1e haproxy.router.openshift.io/ip_whitelist="${MY_CLIENT_IP}" -n istio-system
+
+oc describe route pets-store-front-gw-17ece1ccbd2b8ae0 -n istio-system
+oc describe route pets-store-admin-gw-adbfdae3e2393f1e -n istio-system
 ```
 
 Update the Azure Cosmos DB account networking to accept 0.0.0.0 (connections from Azure datacenter public IPs).  Or just set it to enable all access.

@@ -137,6 +137,21 @@ spec:
       weight: 100
 ---
 apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: azure-cosmosdb
+spec:
+  host: db-frankbuzzard56.documents.azure.com
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+    portLevelSettings:
+      - port:
+          number: 443
+        tls:
+          mode: SIMPLE # initiates HTTPS when accessing db-frankbuzzard56.documents.azure.com
+---
+apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
   name: azure-cosmosdb-region1

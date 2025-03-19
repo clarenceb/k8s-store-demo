@@ -30,6 +30,47 @@ helm install \
     kiali-operator \
     kiali/kiali-operator
 
+# Custom built images
+sudo apt install golang-1.23
+export PATH=$PATH:/usr/lib/go-1.23/bin:$HOME/golang/bin
+export GOPATH=$HOME/golang
+nvm use 20
+mkdir kiali_sources
+cd kiali_sources/
+export KIALI_SOURCES=$(pwd)
+git clone https://github.com/kiali/kiali.git
+git clone https://github.com/kiali/kiali-operator.git
+git clone https://github.com/kiali/helm-charts.git
+ln -s $KIALI_SOURCES/kiali-operator kiali/operator
+cd $KIALI_SOURCES/kiali
+
+make build test
+make build-ui-test
+
+az acr login -n demoappcbxacr
+export CLUSTER_TYPE=local
+make container-build
+docker tag localhost:5000/kiali/kiali:dev demoappcbxacr.azurecr.io/kiali/kiali:dev-arm64
+docker tag localhost:5000/kiali/kiali-operator:dev demoappcbxacr.azurecr.io/kiali/kiali-operator:dev-arm64
+docker push demoappcbxacr.azurecr.io/kiali/kiali-operator:dev-arm64
+docker push demoappcbxacr.azurecr.io/kiali/kiali:dev-arm64
+helm del kiali-operator -n aks-istio-system
+helm upgrade \
+    --install \
+    --set cr.create=true \
+    --set cr.namespace=aks-istio-system \
+    --namespace aks-istio-system \
+    --create-namespace \
+    kiali-operator \
+    kiali/kiali-operator \
+    --set image.repo=demoappcbxacr.azurecr.io/kiali/kiali-operator \
+    --set image.tag=dev-arm64-v6 \
+    --set cr.spec.deployment.image_name=demoappcbxacr.azurecr.io/kiali/kiali \
+    --set cr.spec.deployment.image_version=dev-arm64-v6 \
+    --set allowAdHocKialiImage=true
+kubectl apply -f /home/clarence/dev/demos/k8s-store-demo/istio-demo/manifests/kiali-cr.yaml
+kubectl patch configmap kiali -n aks-istio-system --type='merge' -p '{"istio":{"config_map_names":["istio-asm-1-23","istio-shared-configmap-asm-1-23"]}}'
+
 # Generate a short-lived token to login to Kiali UI
 kubectl -n aks-istio-system create token kiali-service-account
 
