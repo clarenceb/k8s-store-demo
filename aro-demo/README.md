@@ -1,18 +1,24 @@
 # ARO Store Demo
 
+Adaptation of the [AKS Store Demo](github.com:Azure-Samples/aks-store-demo) for Azure Red Hat OpenShift (ARO) with Istio service mesh and Kiali for mesh observability.
+
 ## Create ARO cluster
 
-Refer to the ARO docs.
+Refer to the ARO docs for how to [create your cluster](https://learn.microsoft.com/en-us/azure/openshift/create-cluster).
 
-Just create a default cluster with public API Server and Console.
+For this demo, just create a default ARO cluster with a public API Server and ingress.
 
-## Deploy AKS app to create the necessary Azure infrastrcuture
+## Deploy the AKS infra to create the necessary Azure infrastrcuture
+
+To save time, we'll use the existing setup from the AKS Store Demo to get an environment up and running using the Azure Developer CLI.
+You can stop the AKS cluster or delete it afterwards.
 
 ```sh
+cd ..
 azd up
 ```
 
-## Deploy ARO application
+## Deploy the Pet Store application to ARO
 
 ```sh
 cd aro-demo/

@@ -31,3 +31,29 @@ spec:
   - from:
     - source:
         namespaces: ["pets"]
+# ---
+# apiVersion: security.istio.io/v1
+# kind: AuthorizationPolicy
+# metadata:
+#   name: ingress-policy-deny-all
+#   namespace: aks-istio-system
+# spec:
+#   selector:
+#     matchLabels:
+#       app: istio-ingressgateway
+#   action: DENY
+# ---
+# apiVersion: security.istio.io/v1
+# kind: AuthorizationPolicy
+# metadata:
+#   name: ingress-policyallow-client-ip
+#   namespace: aks-istio-system
+# spec:
+#   selector:
+#     matchLabels:
+#       app: istio-ingressgateway
+#   action: ALLOW
+#   rules:
+#   - from:
+#     - source:
+#         ipBlocks: ["203.123.64.160/32"]
