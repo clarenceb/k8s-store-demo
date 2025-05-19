@@ -43,6 +43,15 @@ To walk through a complete experience where this code is packaged into container
 
  -->
 
+## Updates for various Microsoft events
+
+Note, this repo is not kept up-to-date.  See the original repo that this is based upon: https://github.com/Azure-Samples/aks-store-demo
+
+Changes made:
+
+* [ARO Store Demo](./aro-demo) - Adaptation of the AKS Store Demo for Azure Red Hat OpenShift (ARO) with Istio service mesh (Operator) and Kiali for mesh observability.  See the `aro-demo` sub-directory.
+* [AKS Istio Demo](./istio-demo) - Adaptation of the AKS Store Demo with Istio service mesh (AKS add-on) and Kiali for mesh observability.  See the `istio-demo` sub-directory.
+
 ## Architecture
 
 The application has the following services: 
